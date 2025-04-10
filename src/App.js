@@ -1,25 +1,31 @@
-import logo from './logo.svg';
+import React, { createContext } from 'react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { BrowserRouter, Routes, Route } from 'react-router-dom'; // Nuevos imports
+import Dashboard from './pages/Dashboard';
+import CoinDetail from './pages/CoinDetail'; // Crea este componente después
 import './App.css';
 
-function App() {
+export const ThemeContext = createContext();
+
+const queryClient = new QueryClient();
+
+const App = () => {
+  const darkMode = true;
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <QueryClientProvider client={queryClient}>
+      <ThemeContext.Provider value={{ darkMode }}>
+        <BrowserRouter>
+          <div className={`App ${darkMode ? 'darkMode' : ''}`}>
+            <Routes>
+              <Route path="/" element={<Dashboard />} />
+              <Route path="/coin/:id" element={<CoinDetail />} />
+            </Routes>
+          </div>
+        </BrowserRouter>
+      </ThemeContext.Provider>
+    </QueryClientProvider>
   );
-}
+};
 
 export default App;
